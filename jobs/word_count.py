@@ -9,7 +9,7 @@ LOG_FILENAME = "project.log"
 APP_NAME = "WordCount"
 
 if __name__ == "__main__":
-    logging.basicConfig(filename=LOG_FILENAME, level=logging.INFO)
+    logging.basicConfig(filename=LOG_FILENAME, level=logging.INFO, format='%(asctime)s - %(message)s')
     logging.info(sys.argv)
 
     if len(sys.argv) != 3:

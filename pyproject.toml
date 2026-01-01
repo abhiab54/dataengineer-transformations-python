@@ -10,6 +10,7 @@ pandas = "^2.0.0"
 pyarrow = "^21.0.0"
 pyspark = "~4.0.0"
 python = ">=3.13"
+ipykernel = "^7.1.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.4"

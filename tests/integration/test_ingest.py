@@ -31,6 +31,7 @@ def test_should_sanitize_column_names(spark_session: SparkSession) -> None:
     assert expected.collect() == actual.collect()
 
 
+
 def __create_ingest_and_transform_folders() -> Tuple[str, str]:
     base_path = tempfile.mkdtemp()
     ingest_folder = "%s%s" % (base_path, os.path.sep)

@@ -7,6 +7,7 @@ from pyspark.sql import SparkSession
 from pyspark.sql.types import DoubleType, StructField
 
 from data_transformations.citibike import distance_transformer
+from data_transformations.citibike import ingest
 
 BASE_COLUMNS = [
     "tripduration",
@@ -81,24 +82,8 @@ SAMPLE_DATA = [
 ]
 
 
-def test_should_maintain_all_data_it_reads(spark_session: SparkSession) -> None:
-    given_ingest_folder, given_transform_folder = __create_ingest_and_transform_folders(
-        spark_session
-    )
-    given_dataframe = spark_session.read.parquet(given_ingest_folder)
-    distance_transformer.run(spark_session, given_ingest_folder, given_transform_folder)
-
-    actual_dataframe = spark_session.read.parquet(given_transform_folder)
-    actual_columns = set(actual_dataframe.columns)
-    actual_schema = set(actual_dataframe.schema)
-    expected_columns = set(given_dataframe.columns)
-    expected_schema = set(given_dataframe.schema)
-
-    assert expected_columns == actual_columns
-    assert expected_schema.issubset(actual_schema)
 
 
-@pytest.mark.skip
 def test_should_add_distance_column_with_calculated_distance(
     spark_session: SparkSession,
 ) -> None:
@@ -122,6 +107,21 @@ def test_should_add_distance_column_with_calculated_distance(
     assert expected_distance_schema == actual_distance_schema
     assert expected_dataframe.collect() == actual_dataframe.collect()
 
+def test_should_maintain_all_data_it_reads(spark_session: SparkSession) -> None:
+    given_ingest_folder, given_transform_folder = __create_ingest_and_transform_folders(
+        spark_session
+    )
+    given_dataframe = spark_session.read.parquet(given_ingest_folder)
+    ingest.run(spark_session, given_ingest_folder, given_transform_folder)
+
+    actual_dataframe = spark_session.read.parquet(given_transform_folder)
+    actual_columns = set(actual_dataframe.columns)
+    actual_schema = set(actual_dataframe.schema)
+    expected_columns = set(given_dataframe.columns)
+    expected_schema = set(given_dataframe.schema)
+
+    assert expected_columns == actual_columns
+    assert expected_schema == actual_schema
 
 def __create_ingest_and_transform_folders(spark: SparkSession) -> Tuple[str, str]:
     base_path = tempfile.mkdtemp()

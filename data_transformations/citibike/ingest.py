@@ -5,8 +5,7 @@ from pyspark.sql import SparkSession
 
 
 def sanitize_columns(columns: List[str]) -> List[str]:
-    return [column.replace(" ", "_") for column in columns]
-
+    return [column.strip().replace(" ", "_") for column in columns]
 
 def run(spark: SparkSession, ingest_path: str, transformation_path: str) -> None:
     logging.info("Reading text file from: %s", ingest_path)

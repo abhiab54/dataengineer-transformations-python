@@ -1,10 +1,12 @@
 import pytest
 from pyspark.sql import SparkSession
 
+import logging
+logger = logging.getLogger(__name__)
 
 @pytest.fixture(scope="session")
 def spark_session() -> SparkSession:
-    print(">>> [TEST STARTUP] Creating SparkSession")   # startup message
+    logger.info(">>> [TEST STARTUP] Creating SparkSession")   # startup message
     spark = (
         SparkSession.builder
         .master("local[2]")
@@ -14,5 +16,5 @@ def spark_session() -> SparkSession:
     )
     yield spark
     # teardown
-    print(">>> [TEST TEARDOWN] Stopping SparkSession")
+    logger.info(">>> [TEST TEARDOWN] Stopping SparkSession")
     spark.stop()
